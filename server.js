@@ -32,7 +32,7 @@ const cTable = require('console.table');
         type: 'list',
         name: 'responce',
         message: 'What would you like to do?',
-        choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'add an employee', 'Update Employee role']
+        choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'add an employee', 'Update Employee role','Close ETS']
     },
 ];
 //shows departments in table
@@ -40,15 +40,50 @@ function showDepartments (){
   db.query('SELECT * FROM department', function (err, results) {
       console.table(results);
     });
-    return
 };
+
+//shows roles in table
+function showRoles (){
+  db.query('SELECT * FROM job_title', function (err, results) {
+      console.table(results);
+    });
+};
+
+//shows all employees in table
+function showEmployees (){
+  db.query('SELECT * FROM employee', function (err, results) {
+      console.table(results);
+    });
+};
+
 //main manu handler
 var mainMenu = function () {
   inquirer.prompt(menuQuestion)
       .then(menuResponce => {
-          if (menuResponce === 'view all departments') {
+        console.log(menuResponce)
+          if (menuResponce.responce === 'View all departments') {
             showDepartments();
-            return
+          }
+          if (menuResponce.responce === 'View all roles') {
+            showRoles();
+          }
+          if (menuResponce.responce === 'View all employees') {
+            showEmployees();
+          }
+          if (menuResponce.responce === 'Add a department') {
+            showDepartments();
+          }
+          if (menuResponce.responce === 'Add a role') {
+            showDepartments();
+          }
+          if (menuResponce.responce === 'add an employee') {
+            showDepartments();
+          }
+          if (menuResponce.responce === 'Update Employee role') {
+            showDepartments();
+          }
+          if (menuResponce.responce === 'Close ETS') {
+            process.exit(1)
           }
           else{confirm.log('responces WIP')};
       })
