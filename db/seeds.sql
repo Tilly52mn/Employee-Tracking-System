@@ -17,23 +17,19 @@ VALUES
   ('Sr Purchaser', 70000,3),
   ('Managing Purchaser', 90000,3);
  
-
-  INSERT INTO manager (first_name, last_name, title_id)
-VALUES
-  ('Joe', 'Lidberg', 5),
-  ('Dave', 'Gunderson',4),
-  ('Jeff', 'boyde',10);
-
   INSERT INTO employee (first_name, last_name, title_id, manager_id)
 VALUES
-  ('Nick', 'Grundlow',3,1),
-  ('Tyler', 'Pojonowski',3,1),
-  ('Jake', 'Eckroad',2,1),
-  ('Seth', 'Sanderson',1,1),
-  ('Kim', 'Howlsklaw',8,3),
-  ('Mike', 'Wilert',9,3),
-  ('Kelsey', 'Tillman',8,3),
-  ('Scott', 'johnson',7,2),
-  ('Chris', 'Smith',6,2);
+  ('Nick', 'Grundlow',3,10),
+  ('Tyler', 'Pojonowski',3,10),
+  ('Jake', 'Eckroad',2,10),
+  ('Seth', 'Sanderson',1,10),
+  ('Kim', 'Howlsklaw',8,12),
+  ('Mike', 'Wilert',9,12),
+  ('Kelsey', 'Tillman',8,12),
+  ('Scott', 'johnson',7,11),
+  ('Chris', 'Smith',6,11),
+    ('Joe', 'Lidberg',5,NULL),
+  ('Dave', 'Gunderson',4,NULL),
+  ('Jeff', 'boyde',10,NULL);
 
   

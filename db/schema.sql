@@ -31,5 +31,5 @@ CREATE TABLE employee (
   title_id INTEGER,
   FOREIGN KEY (title_id) REFERENCES job_title(id) ON DELETE SET NULL,
   manager_id INTEGER ,
-  CONSTRAINT fk_manager FOREIGN KEY (id) REFERENCES TABLE(id) ON DELETE SET NULL
+FOREIGN KEY (manager_id) REFERENCES employee(id) ON DELETE SET NULL
 );

@@ -51,7 +51,7 @@ function showRoles (){
 
 //shows all employees in table
 function showEmployees (){
-  db.query('SELECT * FROM employee', function (err, results) {
+  db.query('SELECT * FROM employee;', function (err, results) {
       console.table(results);
     });
 };
@@ -85,9 +85,13 @@ var mainMenu = function () {
           if (menuResponce.responce === 'Close ETS') {
             process.exit(1)
           }
-          else{confirm.log('responces WIP')};
+          // else{confirm.log('responces WIP')};
       })
 };
+
+function addDepartment(params) {
+  
+}
 
 
   //starts application
