@@ -4,6 +4,7 @@ const app = express();
 
 const inquirer = require("inquirer");
 const cTable = require('console.table');
+const { resolve } = require('path/posix');
 
 // main menu question
 var menuQuestion = [
@@ -221,21 +222,95 @@ function addRole() {
             const sql = `INSERT INTO job_title  (title,salary,department_id)
             VALUES
                 (?,?,?);`
-                  const params = [data.roleName, data.salary, results2];
-                  console.log(params)
-                  db.query(sql, params, (err, result) => {
-        
-                    if (err) {
-                      console.log(err);
-                    }
-                    console.log(result);
-                  });
-                  showRoles();
+            const params = [data.roleName, data.salary, results2];
+            console.log(params)
+            db.query(sql, params, (err, result) => {
+
+              if (err) {
+                console.log(err);
+              }
+              console.log(result);
+            });
+            showRoles();
           })
         });
     });
 
 };
+
+//get managers
+const getManager = () => {
+  return new Promise < Array > ((resolve) =>{
+    db.query(`SELECT employee.id, CONCAT(employee.first_name,' ',employee.last_name) AS name FROM employee; `)
+      .then((result) => {
+        resolve(result)
+      })
+  })
+};
+//add a employee
+function addEmployee() {
+  console.log(getManager)
+  // inquirer.prompt([
+  //   {
+  //     type: 'input',
+  //     name: 'roleName',
+  //     message: 'What is the new role?',
+  //     validate: nameInput => {
+  //       if (nameInput) {
+  //         return true;
+  //       } else {
+  //         console.log('You need to enter a role name!');
+  //         return false;
+  //       }
+  //     }
+  //   },
+  //   {
+  //     type: 'number',
+  //     name: 'salary',
+  //     message: 'What is the roles salary?',
+  //     validate: nameInput => {
+  //       if (nameInput) {
+  //         return true;
+  //       } else {
+  //         console.log('You need to enter a role salary!');
+  //         return false;
+  //       }
+  //     }
+  //   },
+  //   {
+  //     type: 'list',
+  //     name: 'deptName',
+  //     message: 'What department is this role in?',
+  //     choices: results
+  //   },
+  // ])
+
+  // const managerChoices =
+  //   db.query('SELECT employee.id, CONCAT(employee.first_name,' ',employee.last_name) AS name FROM employee; ', function (err, results) {
+  //     results = results.map(obj => obj.name);
+  //       .then((data) => {
+  //         const sql2 = `SELECT * FROM department WHERE dept_name = '${data.deptName}';`
+  //         db.query(sql2, function (err, results2) {
+  //           results2 = results2.map(obj => obj.id);
+  //           const sql = `INSERT INTO job_title  (title,salary,department_id)
+  //           VALUES
+  //               (?,?,?);`
+  //                 const params = [data.roleName, data.salary, results2];
+  //                 console.log(params)
+  //                 db.query(sql, params, (err, result) => {
+
+  //                   if (err) {
+  //                     console.log(err);
+  //                   }
+  //                   console.log(result);
+  //                 });
+  //                 showRoles();
+  //         })
+  //       });
+  //   });
+
+};
+
 
 //main manu handler
 var mainMenu = function () {
@@ -258,7 +333,7 @@ var mainMenu = function () {
         addRole();
       }
       if (menuResponce.responce === 'add an employee') {
-        showDepartments();
+        addEmployee();
       }
       if (menuResponce.responce === 'Update Employee role') {
         showDepartments();
@@ -266,7 +341,6 @@ var mainMenu = function () {
       if (menuResponce.responce === 'Close ETS') {
         process.exit(1)
       }
-      // else{confirm.log('responces WIP')};
     })
 };
 
@@ -284,3 +358,5 @@ var initializeETS = function () {
 
 
 initializeETS();
+
+chekcirf
