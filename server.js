@@ -32,6 +32,42 @@ var deptAddQuestion = [
 },
 ];
 
+//add a role questions
+var roleAddQuestion = [
+  {
+    type: 'input',
+    name: 'roleName',
+    message: 'What is the new role?',
+    validate: nameInput => {
+        if (nameInput) {
+            return true;
+        } else {
+            console.log('You need to enter a role name!');
+            return false;
+        }
+    }
+},
+{
+  type: 'number',
+  name: 'salary',
+  message: 'What is the roles salary?',
+  validate: nameInput => {
+      if (nameInput) {
+          return true;
+      } else {
+          console.log('You need to enter a role salary!');
+          return false;
+      }
+  }
+},
+{
+  type: 'list',
+  name: 'deptName',
+  message: 'What department is this role in?',
+  choices: ['']
+},
+];
+
 //add employee questions
 var employeeAddQuestion = [
   {
@@ -74,41 +110,6 @@ var employeeAddQuestion = [
 },
 ];
 
-//add a role questions
-var roleAddQuestion = [
-  {
-    type: 'input',
-    name: 'roleName',
-    message: 'What is the new role?',
-    validate: nameInput => {
-        if (nameInput) {
-            return true;
-        } else {
-            console.log('You need to enter a role name!');
-            return false;
-        }
-    }
-},
-{
-  type: 'number',
-  name: 'salary',
-  message: 'What is the roles salary?',
-  validate: nameInput => {
-      if (nameInput) {
-          return true;
-      } else {
-          console.log('You need to enter a role salary!');
-          return false;
-      }
-  }
-},
-{
-  type: 'list',
-  name: 'deptName',
-  message: 'What department is this role in?',
-  choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'add an employee', 'Update Employee role','Close ETS']
-},
-];
 //update Employee role questions
 var updateEmployeeRoleQuestion = [
   {
@@ -128,6 +129,7 @@ var updateEmployeeRoleQuestion = [
 function showDepartments (){
   db.query('SELECT * FROM department', function (err, results) {
       console.table(results);
+      mainMenu();
     });
 };
 
@@ -135,6 +137,7 @@ function showDepartments (){
 function showRoles (){
   db.query('SELECT * FROM job_title', function (err, results) {
       console.table(results);
+      mainMenu();
     });
 };
 
@@ -149,6 +152,7 @@ function showEmployees (){
   JOIN department ON job_title.department_id=department.id`;
   db.query(sql, function (err, results) {
       console.table(results);
+      mainMenu();
     });
 };
 
@@ -173,12 +177,50 @@ showDepartments();
 
 //add a role
 function addRole() {
-  inquirer.prompt(roleAddQuestion)
+  const deptChoices =  
+   db.query('SELECT dept_name FROM department', function (err, results) {
+    console.log(results)
+    return results;
+  });
+  inquirer.prompt([
+    {
+      type: 'input',
+      name: 'roleName',
+      message: 'What is the new role?',
+      validate: nameInput => {
+          if (nameInput) {
+              return true;
+          } else {
+              console.log('You need to enter a role name!');
+              return false;
+          }
+      }
+  },
+  {
+    type: 'number',
+    name: 'salary',
+    message: 'What is the roles salary?',
+    validate: nameInput => {
+        if (nameInput) {
+            return true;
+        } else {
+            console.log('You need to enter a role salary!');
+            return false;
+        }
+    }
+  },
+  {
+    type: 'list',
+    name: 'deptName',
+    message: 'What department is this role in?',
+    choices: deptChoices
+  },
+  ])
   .then((data) => {
-const sql =`INSERT INTO job_title  (title,salary)
+const sql =`INSERT INTO job_title  (title,salary,deptartment_id)
 VALUES
     (?,?);`
-    const params = [data.roleName,data.salary];
+    const params = [data.roleName,data.salary,data.deptName];
     db.query(sql, params, (err, result) => {
 
       if (err) {
@@ -221,7 +263,6 @@ var mainMenu = function () {
           }
           // else{confirm.log('responces WIP')};
       })
-      mainMenu();
 };
 
 
