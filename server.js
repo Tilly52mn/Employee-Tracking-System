@@ -221,6 +221,7 @@ var mainMenu = function () {
           }
           // else{confirm.log('responces WIP')};
       })
+      mainMenu();
 };
 
 
