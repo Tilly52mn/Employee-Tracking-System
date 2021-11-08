@@ -180,7 +180,6 @@ function addRole() {
   const deptChoices =
     db.query('SELECT dept_name FROM department', function (err, results) {
       results = results.map(obj => obj.dept_name);
-      console.log(results)
       inquirer.prompt([
         {
           type: 'input',
@@ -216,25 +215,26 @@ function addRole() {
         },
       ])
         .then((data) => {
-          const sql2 = `SELECT * FROM department WHERE dept_name = '${data}';`
-          db.query=(sql2,(err,results) =>{
-            console.log(results)
+          const sql2 = `SELECT * FROM department WHERE dept_name = '${data.deptName}';`
+          db.query(sql2, function (err, results2) {
+            results2 = results2.map(obj => obj.id);
+            const sql = `INSERT INTO job_title  (title,salary,department_id)
+            VALUES
+                (?,?,?);`
+                  const params = [data.roleName, data.salary, results2];
+                  console.log(params)
+                  db.query(sql, params, (err, result) => {
+        
+                    if (err) {
+                      console.log(err);
+                    }
+                    console.log(result);
+                  });
+                  showRoles();
           })
-          const sql = `INSERT INTO job_title  (title,salary,deptartment_id)
-    VALUES
-        (?,?);`
-          const params = [data.roleName, data.salary, data.deptName];
-          db.query(sql, params, (err, result) => {
-    
-            if (err) {
-              console.log(err);
-            }
-            console.log(result);
-          });
-          showRoles();
         });
     });
- 
+
 };
 
 //main manu handler
