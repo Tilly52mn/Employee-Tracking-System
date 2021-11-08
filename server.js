@@ -102,6 +102,12 @@ var roleAddQuestion = [
       }
   }
 },
+{
+  type: 'list',
+  name: 'deptName',
+  message: 'What department is this role in?',
+  choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'add an employee', 'Update Employee role','Close ETS']
+},
 ];
 //update Employee role questions
 var updateEmployeeRoleQuestion = [
@@ -152,7 +158,7 @@ function addDepartment() {
   .then((data) => {
 const sql =`INSERT INTO department  (dept_name)
 VALUES
-    ('?)';`
+    (?);`
     const params = [data.deptName];
     db.query(sql, params, (err, result) => {
 
@@ -162,6 +168,25 @@ VALUES
       console.log(result);
   });
 showDepartments();
+  });
+};
+
+//add a role
+function addRole() {
+  inquirer.prompt(roleAddQuestion)
+  .then((data) => {
+const sql =`INSERT INTO job_title  (title,salary)
+VALUES
+    (?,?);`
+    const params = [data.roleName,data.salary];
+    db.query(sql, params, (err, result) => {
+
+      if (err) {
+        console.log(err);
+      }
+      console.log(result);
+  });
+showRoles();
   });
 };
 
@@ -183,7 +208,7 @@ var mainMenu = function () {
             addDepartment();
           }
           if (menuResponce.responce === 'Add a role') {
-            showDepartments();
+            addRole();
           }
           if (menuResponce.responce === 'add an employee') {
             showDepartments();
