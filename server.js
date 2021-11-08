@@ -51,7 +51,14 @@ function showRoles (){
 
 //shows all employees in table
 function showEmployees (){
-  db.query('SELECT * FROM employee;', function (err, results) {
+  const sql = `SELECT employee.id,employee.first_name,employee.last_name,job_title.title, job_title.salary ,department.dept_name AS department,
+  CONCAT(manager.first_name," ",manager.last_name)
+   AS manager
+  FROM employee 
+  LEFT JOIN employee manager ON employee.manager_id=manager.id
+  JOIN job_title ON employee.title_id =job_title.id
+  JOIN department ON job_title.department_id=department.id`;
+  db.query(sql, function (err, results) {
       console.table(results);
     });
 };

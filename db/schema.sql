@@ -16,14 +16,6 @@ CREATE TABLE job_title (
   FOREIGN KEY (department_id) REFERENCES department(id) ON DELETE SET NULL
 );
 
-CREATE TABLE manager (
-  id INTEGER AUTO_INCREMENT PRIMARY KEY,
-  first_name VARCHAR(30) NOT NULL,
-  last_name VARCHAR(30) NOT NULL,
-  title_id INTEGER,
-  FOREIGN KEY (title_id) REFERENCES job_title(id) ON DELETE SET NULL
-);
-
 CREATE TABLE employee (
   id INTEGER AUTO_INCREMENT PRIMARY KEY,
   first_name VARCHAR(30) NOT NULL,
