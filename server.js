@@ -6,13 +6,13 @@ const inquirer = require("inquirer");
 const cTable = require('console.table');
 
 // main menu question
-  var menuQuestion = [
-    {
-        type: 'list',
-        name: 'responce',
-        message: 'What would you like to do?',
-        choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'add an employee', 'Update Employee role','Close ETS']
-    },
+var menuQuestion = [
+  {
+    type: 'list',
+    name: 'responce',
+    message: 'What would you like to do?',
+    choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'add an employee', 'Update Employee role', 'Close ETS']
+  },
 ];
 
 // add dept questions
@@ -22,14 +22,14 @@ var deptAddQuestion = [
     name: 'deptName',
     message: 'What is the new department?',
     validate: nameInput => {
-        if (nameInput) {
-            return true;
-        } else {
-            console.log('You need to enter a department name!');
-            return false;
-        }
+      if (nameInput) {
+        return true;
+      } else {
+        console.log('You need to enter a department name!');
+        return false;
+      }
     }
-},
+  },
 ];
 
 //add a role questions
@@ -39,33 +39,33 @@ var roleAddQuestion = [
     name: 'roleName',
     message: 'What is the new role?',
     validate: nameInput => {
-        if (nameInput) {
-            return true;
-        } else {
-            console.log('You need to enter a role name!');
-            return false;
-        }
-    }
-},
-{
-  type: 'number',
-  name: 'salary',
-  message: 'What is the roles salary?',
-  validate: nameInput => {
       if (nameInput) {
-          return true;
+        return true;
       } else {
-          console.log('You need to enter a role salary!');
-          return false;
+        console.log('You need to enter a role name!');
+        return false;
       }
-  }
-},
-{
-  type: 'list',
-  name: 'deptName',
-  message: 'What department is this role in?',
-  choices: ['']
-},
+    }
+  },
+  {
+    type: 'number',
+    name: 'salary',
+    message: 'What is the roles salary?',
+    validate: nameInput => {
+      if (nameInput) {
+        return true;
+      } else {
+        console.log('You need to enter a role salary!');
+        return false;
+      }
+    }
+  },
+  {
+    type: 'list',
+    name: 'deptName',
+    message: 'What department is this role in?',
+    choices: ['']
+  },
 ];
 
 //add employee questions
@@ -75,39 +75,39 @@ var employeeAddQuestion = [
     name: 'first_name',
     message: 'What is the first name?',
     validate: nameInput => {
-        if (nameInput) {
-            return true;
-        } else {
-            console.log('You need to enter a first name!');
-            return false;
-        }
-    }
-},  
-{
-  type: 'input',
-  name: 'last_name',
-  message: 'What is the last name?',
-  validate: nameInput => {
       if (nameInput) {
-          return true;
+        return true;
       } else {
-          console.log('You need to enter a last name!');
-          return false;
+        console.log('You need to enter a first name!');
+        return false;
       }
-  }
-},
-{
-  type: 'list',
-  name: 'manager',
-  message: 'Who is the new employees manager?',
-  choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'add an employee', 'Update Employee role','Close ETS']
-},
-{
-  type: 'list',
-  name: 'role',
-  message: 'Who is the new employees role?',
-  choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'add an employee', 'Update Employee role','Close ETS']
-},
+    }
+  },
+  {
+    type: 'input',
+    name: 'last_name',
+    message: 'What is the last name?',
+    validate: nameInput => {
+      if (nameInput) {
+        return true;
+      } else {
+        console.log('You need to enter a last name!');
+        return false;
+      }
+    }
+  },
+  {
+    type: 'list',
+    name: 'manager',
+    message: 'Who is the new employees manager?',
+    choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'add an employee', 'Update Employee role', 'Close ETS']
+  },
+  {
+    type: 'list',
+    name: 'role',
+    message: 'Who is the new employees role?',
+    choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'add an employee', 'Update Employee role', 'Close ETS']
+  },
 ];
 
 //update Employee role questions
@@ -116,33 +116,33 @@ var updateEmployeeRoleQuestion = [
     type: 'list',
     name: 'employeeName',
     message: 'Who is the employee to update?',
-    choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'add an employee', 'Update Employee role','Close ETS']
-},
-{
-  type: 'list',
-  name: 'employeeNewRole',
-  message: 'Who is the employees new role?',
-  choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'add an employee', 'Update Employee role','Close ETS']
-},
+    choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'add an employee', 'Update Employee role', 'Close ETS']
+  },
+  {
+    type: 'list',
+    name: 'employeeNewRole',
+    message: 'Who is the employees new role?',
+    choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'add an employee', 'Update Employee role', 'Close ETS']
+  },
 ];
 //shows departments in table
-function showDepartments (){
+function showDepartments() {
   db.query('SELECT * FROM department', function (err, results) {
-      console.table(results);
-      mainMenu();
-    });
+    console.table(results);
+    mainMenu();
+  });
 };
 
 //shows roles in table
-function showRoles (){
+function showRoles() {
   db.query('SELECT * FROM job_title', function (err, results) {
-      console.table(results);
-      mainMenu();
-    });
+    console.table(results);
+    mainMenu();
+  });
 };
 
 //shows all employees in table
-function showEmployees (){
+function showEmployees() {
   const sql = `SELECT employee.id,employee.first_name,employee.last_name,job_title.title, job_title.salary ,department.dept_name AS department,
   CONCAT(manager.first_name," ",manager.last_name)
    AS manager
@@ -151,129 +151,134 @@ function showEmployees (){
   JOIN job_title ON employee.title_id =job_title.id
   JOIN department ON job_title.department_id=department.id`;
   db.query(sql, function (err, results) {
-      console.table(results);
-      mainMenu();
-    });
+    console.table(results);
+    mainMenu();
+  });
 };
 
 //add a department
 function addDepartment() {
   inquirer.prompt(deptAddQuestion)
-  .then((data) => {
-const sql =`INSERT INTO department  (dept_name)
+    .then((data) => {
+      const sql = `INSERT INTO department  (dept_name)
 VALUES
     (?);`
-    const params = [data.deptName];
-    db.query(sql, params, (err, result) => {
+      const params = [data.deptName];
+      db.query(sql, params, (err, result) => {
 
-      if (err) {
-        console.log(err);
-      }
-      console.log(result);
-  });
-showDepartments();
-  });
+        if (err) {
+          console.log(err);
+        }
+        console.log(result);
+      });
+      showDepartments();
+    });
 };
 
 //add a role
 function addRole() {
-  const deptChoices =  
-   db.query('SELECT dept_name FROM department', function (err, results) {
-    console.log(results)
-    return results;
-  });
-  inquirer.prompt([
-    {
-      type: 'input',
-      name: 'roleName',
-      message: 'What is the new role?',
-      validate: nameInput => {
-          if (nameInput) {
+  const deptChoices =
+    db.query('SELECT dept_name FROM department', function (err, results) {
+      results = results.map(obj => obj.dept_name);
+      console.log(results)
+      inquirer.prompt([
+        {
+          type: 'input',
+          name: 'roleName',
+          message: 'What is the new role?',
+          validate: nameInput => {
+            if (nameInput) {
               return true;
-          } else {
+            } else {
               console.log('You need to enter a role name!');
               return false;
+            }
           }
-      }
-  },
-  {
-    type: 'number',
-    name: 'salary',
-    message: 'What is the roles salary?',
-    validate: nameInput => {
-        if (nameInput) {
-            return true;
-        } else {
-            console.log('You need to enter a role salary!');
-            return false;
-        }
-    }
-  },
-  {
-    type: 'list',
-    name: 'deptName',
-    message: 'What department is this role in?',
-    choices: deptChoices
-  },
-  ])
-  .then((data) => {
-const sql =`INSERT INTO job_title  (title,salary,deptartment_id)
-VALUES
-    (?,?);`
-    const params = [data.roleName,data.salary,data.deptName];
-    db.query(sql, params, (err, result) => {
-
-      if (err) {
-        console.log(err);
-      }
-      console.log(result);
-  });
-showRoles();
-  });
+        },
+        {
+          type: 'number',
+          name: 'salary',
+          message: 'What is the roles salary?',
+          validate: nameInput => {
+            if (nameInput) {
+              return true;
+            } else {
+              console.log('You need to enter a role salary!');
+              return false;
+            }
+          }
+        },
+        {
+          type: 'list',
+          name: 'deptName',
+          message: 'What department is this role in?',
+          choices: results
+        },
+      ])
+        .then((data) => {
+          const sql2 = `SELECT * FROM department WHERE dept_name = '${data}';`
+          db.query=(sql2,(err,results) =>{
+            console.log(results)
+          })
+          const sql = `INSERT INTO job_title  (title,salary,deptartment_id)
+    VALUES
+        (?,?);`
+          const params = [data.roleName, data.salary, data.deptName];
+          db.query(sql, params, (err, result) => {
+    
+            if (err) {
+              console.log(err);
+            }
+            console.log(result);
+          });
+          showRoles();
+        });
+    });
+ 
 };
 
 //main manu handler
 var mainMenu = function () {
   inquirer.prompt(menuQuestion)
-      .then(menuResponce => {
-        console.log(menuResponce)
-          if (menuResponce.responce === 'View all departments') {
-            showDepartments();
-          }
-          if (menuResponce.responce === 'View all roles') {
-            showRoles();
-          }
-          if (menuResponce.responce === 'View all employees') {
-            showEmployees();
-          }
-          if (menuResponce.responce === 'Add a department') {
-            addDepartment();
-          }
-          if (menuResponce.responce === 'Add a role') {
-            addRole();
-          }
-          if (menuResponce.responce === 'add an employee') {
-            showDepartments();
-          }
-          if (menuResponce.responce === 'Update Employee role') {
-            showDepartments();
-          }
-          if (menuResponce.responce === 'Close ETS') {
-            process.exit(1)
-          }
-          // else{confirm.log('responces WIP')};
-      })
+    .then(menuResponce => {
+      console.log(menuResponce)
+      if (menuResponce.responce === 'View all departments') {
+        showDepartments();
+      }
+      if (menuResponce.responce === 'View all roles') {
+        showRoles();
+      }
+      if (menuResponce.responce === 'View all employees') {
+        showEmployees();
+      }
+      if (menuResponce.responce === 'Add a department') {
+        addDepartment();
+      }
+      if (menuResponce.responce === 'Add a role') {
+        addRole();
+      }
+      if (menuResponce.responce === 'add an employee') {
+        showDepartments();
+      }
+      if (menuResponce.responce === 'Update Employee role') {
+        showDepartments();
+      }
+      if (menuResponce.responce === 'Close ETS') {
+        process.exit(1)
+      }
+      // else{confirm.log('responces WIP')};
+    })
 };
 
 
 
 
-  //starts application
-var initializeETS = function(){
+//starts application
+var initializeETS = function () {
   //start up
   console.log('==EMPLOYEE TRACKING SYSTEM==');
   mainMenu();
-  };
+};
 
 
 
