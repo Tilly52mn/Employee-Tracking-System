@@ -1,30 +1,9 @@
 const express = require('express');
 const db = require('./db/connection');
-// const apiRoutes = require('./routes');
-// const PORT = process.env.PORT || 3001;
 const app = express();
 
 const inquirer = require("inquirer");
 const cTable = require('console.table');
-
-// Express middleware
-// app.use(express.urlencoded({ extended: false }));
-// app.use(express.json());
-
-// app.use('/api', apiRoutes);
-
-// app.use((req, res) => {
-//     res.status(404).end();
-// });
-
-// Start server after DB connection
-// db.connect(err => {
-  //   if (err) throw err;
-  //   console.log('Database connected.');
-  //   app.listen(PORT, () => {
-  //     console.log(`Server running on port ${PORT}`);
-  //   });
-  // });
 
 // main menu question
   var menuQuestion = [
@@ -34,6 +13,110 @@ const cTable = require('console.table');
         message: 'What would you like to do?',
         choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'add an employee', 'Update Employee role','Close ETS']
     },
+];
+
+// add dept questions
+var deptAddQuestion = [
+  {
+    type: 'input',
+    name: 'deptName',
+    message: 'What is the new department?',
+    validate: nameInput => {
+        if (nameInput) {
+            return true;
+        } else {
+            console.log('You need to enter a department name!');
+            return false;
+        }
+    }
+},
+];
+
+//add employee questions
+var employeeAddQuestion = [
+  {
+    type: 'input',
+    name: 'first_name',
+    message: 'What is the first name?',
+    validate: nameInput => {
+        if (nameInput) {
+            return true;
+        } else {
+            console.log('You need to enter a first name!');
+            return false;
+        }
+    }
+},  
+{
+  type: 'input',
+  name: 'last_name',
+  message: 'What is the last name?',
+  validate: nameInput => {
+      if (nameInput) {
+          return true;
+      } else {
+          console.log('You need to enter a last name!');
+          return false;
+      }
+  }
+},
+{
+  type: 'list',
+  name: 'manager',
+  message: 'Who is the new employees manager?',
+  choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'add an employee', 'Update Employee role','Close ETS']
+},
+{
+  type: 'list',
+  name: 'role',
+  message: 'Who is the new employees role?',
+  choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'add an employee', 'Update Employee role','Close ETS']
+},
+];
+
+//add a role questions
+var roleAddQuestion = [
+  {
+    type: 'input',
+    name: 'roleName',
+    message: 'What is the new role?',
+    validate: nameInput => {
+        if (nameInput) {
+            return true;
+        } else {
+            console.log('You need to enter a role name!');
+            return false;
+        }
+    }
+},
+{
+  type: 'number',
+  name: 'salary',
+  message: 'What is the roles salary?',
+  validate: nameInput => {
+      if (nameInput) {
+          return true;
+      } else {
+          console.log('You need to enter a role salary!');
+          return false;
+      }
+  }
+},
+];
+//update Employee role questions
+var deptAddQuestion = [
+  {
+    type: 'list',
+    name: 'employeeName',
+    message: 'Who is the employee to update?',
+    choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'add an employee', 'Update Employee role','Close ETS']
+},
+{
+  type: 'list',
+  name: 'employeeNewRole',
+  message: 'Who is the employees new role?',
+  choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'add an employee', 'Update Employee role','Close ETS']
+},
 ];
 //shows departments in table
 function showDepartments (){
@@ -63,6 +146,25 @@ function showEmployees (){
     });
 };
 
+//add a department
+function addDepartment() {
+  inquirer.prompt(deptAddQuestion)
+  .then((data) => {
+const sql =`INSERT INTO department  (dept_name)
+VALUES
+    ('?)';`
+    const params = [data.deptName];
+    db.query(sql, params, (err, result) => {
+
+      if (err) {
+        console.log(err);
+      }
+      console.log(result);
+  });
+showDepartments();
+  });
+};
+
 //main manu handler
 var mainMenu = function () {
   inquirer.prompt(menuQuestion)
@@ -78,7 +180,7 @@ var mainMenu = function () {
             showEmployees();
           }
           if (menuResponce.responce === 'Add a department') {
-            showDepartments();
+            addDepartment();
           }
           if (menuResponce.responce === 'Add a role') {
             showDepartments();
@@ -96,9 +198,7 @@ var mainMenu = function () {
       })
 };
 
-function addDepartment(params) {
-  
-}
+
 
 
   //starts application
