@@ -104,7 +104,7 @@ var roleAddQuestion = [
 },
 ];
 //update Employee role questions
-var deptAddQuestion = [
+var updateEmployeeRoleQuestion = [
   {
     type: 'list',
     name: 'employeeName',
