@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('./db/connection');
 const app = express();
+const mysql = require('mysql2/promise');
 
 const inquirer = require("inquirer");
 const cTable = require('console.table');
@@ -240,16 +241,20 @@ function addRole() {
 
 //get managers
 const getManager = () => {
-  return new Promise < Array > ((resolve) =>{
+  return  listEmployee = new Promise((resolve) =>{
     db.query(`SELECT employee.id, CONCAT(employee.first_name,' ',employee.last_name) AS name FROM employee; `)
       .then((result) => {
-        resolve(result)
+        
+        // results2 = results2.map(obj => obj.id);
+        // result
+        resolve({result})
       })
   })
 };
 //add a employee
 function addEmployee() {
-  console.log(getManager)
+const managerArray=getManager();d
+  console.log(managerArray)
   // inquirer.prompt([
   //   {
   //     type: 'input',
@@ -358,5 +363,3 @@ var initializeETS = function () {
 
 
 initializeETS();
-
-chekcirf
