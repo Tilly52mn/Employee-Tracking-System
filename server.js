@@ -241,20 +241,18 @@ function addRole() {
 
 //get managers
 const getManager = () => {
-  return  listEmployee = new Promise((resolve) =>{
-    db.query(`SELECT employee.id, CONCAT(employee.first_name,' ',employee.last_name) AS name FROM employee; `)
+  return db.promise().query(`SELECT employee.id, CONCAT(employee.first_name,' ',employee.last_name) AS name FROM employee; `)
       .then((result) => {
-        
+        console.log(result)
         // results2 = results2.map(obj => obj.id);
         // result
         resolve({result})
       })
-  })
 };
 //add a employee
 function addEmployee() {
-const managerArray=getManager();d
-  console.log(managerArray)
+const managerArray=getManager();
+  console.log("managers "+managerArray[0])
   // inquirer.prompt([
   //   {
   //     type: 'input',
