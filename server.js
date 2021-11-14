@@ -243,10 +243,9 @@ function addRole() {
 const getManager = () => {
   return db.promise().query(`SELECT employee.id, CONCAT(employee.first_name,' ',employee.last_name) AS name FROM employee; `)
       .then((result) => {
+        console.log(result[0])
+        result = result[0].map(obj => obj.name);
         console.log(result)
-        // results2 = results2.map(obj => obj.id);
-        // result
-        resolve({result})
       })
 };
 //add a employee
