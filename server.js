@@ -6,6 +6,8 @@ const mysql = require('mysql2/promise');
 const inquirer = require("inquirer");
 const cTable = require('console.table');
 const { resolve } = require('path/posix');
+var managerArray = null;
+var roleArray = null;
 
 // main menu question
 var menuQuestion = [
@@ -242,50 +244,80 @@ function addRole() {
 //get managers
 const getManager = () => {
   return db.promise().query(`SELECT employee.id, CONCAT(employee.first_name,' ',employee.last_name) AS name FROM employee; `)
-      .then((result) => {
-        console.log(result[0])
-        result = result[0].map(obj => obj.name);
-        console.log(result)
-      })
+    .then((result) => {
+      console.log(result[0])
+      result = result[0].map(obj => obj.name);
+      console.log(result)
+      return result
+    })
 };
+
+//get role
+const getRole = () => {
+  return db.promise().query('SELECT job_title.title FROM job_title;')
+    .then((result) => {
+      console.log(result[0])
+      result = result[0].map(obj => obj.title);
+      console.log(result)
+      return result
+    })
+};
+
 //add a employee
 function addEmployee() {
-const managerArray=getManager();
-  console.log("managers "+managerArray[0])
-  // inquirer.prompt([
-  //   {
-  //     type: 'input',
-  //     name: 'roleName',
-  //     message: 'What is the new role?',
-  //     validate: nameInput => {
-  //       if (nameInput) {
-  //         return true;
-  //       } else {
-  //         console.log('You need to enter a role name!');
-  //         return false;
-  //       }
-  //     }
-  //   },
-  //   {
-  //     type: 'number',
-  //     name: 'salary',
-  //     message: 'What is the roles salary?',
-  //     validate: nameInput => {
-  //       if (nameInput) {
-  //         return true;
-  //       } else {
-  //         console.log('You need to enter a role salary!');
-  //         return false;
-  //       }
-  //     }
-  //   },
-  //   {
-  //     type: 'list',
-  //     name: 'deptName',
-  //     message: 'What department is this role in?',
-  //     choices: results
-  //   },
-  // ])
+  getManager()
+    .then((managerArray) => {
+      console.log(managerArray);
+      inquirer.prompt(
+        [
+          {
+            type: 'input',
+            name: 'first_name',
+            message: 'What is the first name?',
+            validate: firstnameInput => {
+              if (firstnameInput) {
+                return true;
+              } else {
+                console.log('You need to enter a first name!');
+                return false;
+              }
+            }
+          },
+          {
+            type: 'input',
+            name: 'last_name',
+            message: 'What is the last name?',
+            validate: nameInput => {
+              if (nameInput) {
+                return true;
+              } else {
+                console.log('You need to enter a last name!');
+                return false;
+              }
+            }
+          },
+          {
+            type: 'list',
+            name: 'manager',
+            message: 'Who is the new employees manager?',
+            choices: managerArray
+          },
+        ]
+      ).then(
+        getRole()
+          .then((roleArray) => {
+            inquirer.prompt(
+              [
+                {
+                  type: 'list',
+                  name: 'role',
+                  message: 'What is the new employees role?',
+                  choices: roleArray
+                },
+              ])
+          })
+      )
+    })
 
   // const managerChoices =
   //   db.query('SELECT employee.id, CONCAT(employee.first_name,' ',employee.last_name) AS name FROM employee; ', function (err, results) {
