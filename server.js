@@ -6,8 +6,7 @@ const mysql = require('mysql2/promise');
 const inquirer = require("inquirer");
 const cTable = require('console.table');
 const { resolve } = require('path/posix');
-var managerArray = null;
-var roleArray = null;
+var newEmployee = null;
 
 // main menu question
 var menuQuestion = [
@@ -218,6 +217,7 @@ function addRole() {
           choices: results
         },
       ])
+      // .then(async function (data){})
         .then((data) => {
           const sql2 = `SELECT * FROM department WHERE dept_name = '${data.deptName}';`
           db.query(sql2, function (err, results2) {
@@ -264,60 +264,52 @@ const getRole = () => {
 };
 
 //add a employee
-function addEmployee() {
-  getManager()
-    .then((managerArray) => {
-      console.log(managerArray);
-      inquirer.prompt(
-        [
-          {
-            type: 'input',
-            name: 'first_name',
-            message: 'What is the first name?',
-            validate: firstnameInput => {
-              if (firstnameInput) {
-                return true;
-              } else {
-                console.log('You need to enter a first name!');
-                return false;
-              }
+var addEmployee =async function() {
+  var managerList = await getManager();
+  var roleList = await getRole();
+    inquirer.prompt(
+      [
+        {
+          type: 'input',
+          name: 'first_name',
+          message: 'What is the first name?',
+          validate: firstnameInput => {
+            if (firstnameInput) {
+              return true;
+            } else {
+              console.log('You need to enter a first name!');
+              return false;
             }
-          },
-          {
-            type: 'input',
-            name: 'last_name',
-            message: 'What is the last name?',
-            validate: nameInput => {
-              if (nameInput) {
-                return true;
-              } else {
-                console.log('You need to enter a last name!');
-                return false;
-              }
+          }
+        },
+        {
+          type: 'input',
+          name: 'last_name',
+          message: 'What is the last name?',
+          validate: nameInput => {
+            if (nameInput) {
+              return true;
+            } else {
+              console.log('You need to enter a last name!');
+              return false;
             }
-          },
-          {
-            type: 'list',
-            name: 'manager',
-            message: 'Who is the new employees manager?',
-            choices: managerArray
-          },
-        ]
-      ).then(
-        getRole()
-          .then((roleArray) => {
-            inquirer.prompt(
-              [
-                {
-                  type: 'list',
-                  name: 'role',
-                  message: 'What is the new employees role?',
-                  choices: roleArray
-                },
-              ])
-          })
-      )
-    })
+          }
+        },
+        {
+          type: 'list',
+          name: 'manager',
+          message: 'Who is the new employees manager?',
+          choices: managerList
+        },
+        {
+          type: 'list',
+          name: 'role',
+          message: 'What is the new employees role?',
+          choices: roleList
+        },
+      ]
+    )
+
 
   // const managerChoices =
   //   db.query('SELECT employee.id, CONCAT(employee.first_name,' ',employee.last_name) AS name FROM employee; ', function (err, results) {
@@ -348,6 +340,7 @@ function addEmployee() {
 
 //main manu handler
 var mainMenu = function () {
+
   inquirer.prompt(menuQuestion)
     .then(menuResponce => {
       console.log(menuResponce)
