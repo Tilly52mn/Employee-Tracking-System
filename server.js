@@ -171,7 +171,6 @@ VALUES
         if (err) {
           console.log(err);
         }
-        console.log(result);
       });
       showDepartments();
     });
@@ -231,7 +230,6 @@ function addRole() {
               if (err) {
                 console.log(err);
               }
-              console.log(result);
             });
             showRoles();
           })
@@ -244,9 +242,7 @@ function addRole() {
 const getEmployees = () => {
   return db.promise().query(`SELECT employee.id, CONCAT(employee.first_name,' ',employee.last_name) AS name FROM employee; `)
     .then((result) => {
-      console.log(result[0])
       result = result[0].map(obj => obj.name);
-      console.log(result)
       return result
     })
 };
@@ -256,16 +252,11 @@ const getManagerId = (data) => {
   const employeeManager = data.manager.split(" ")
   var first_name = employeeManager[0];
   var last_name = employeeManager[1];
-  console.log(first_name)
-  console.log(last_name)
   const sql2 = `SELECT employee.id FROM employee WHERE first_name = '${first_name}' AND last_name = '${last_name}';`
   return db.promise().query(sql2)
     .then((result) => {
-      console.log(result[0])
       result = result[0].map(obj => obj.id);
-
       result = result[0]
-      console.log(result)
       return result
     })
 }
@@ -274,10 +265,8 @@ const getManagerId = (data) => {
 const getRoleId = (data) => {
   return db.promise().query(`SELECT job_title.id FROM job_title WHERE title = '${data.role}';`)
     .then((result) => {
-      console.log(result[0])
       result = result[0].map(obj => obj.id);
       result = result[0]
-      console.log(result)
       return result
     })
 }
@@ -286,9 +275,7 @@ const getRoleId = (data) => {
 const getRole = () => {
   return db.promise().query('SELECT job_title.title FROM job_title;')
     .then((result) => {
-      console.log(result[0])
       result = result[0].map(obj => obj.title);
-      console.log(result)
       return result
     })
 };
@@ -304,7 +291,6 @@ const addEmployeeMySQL = (data, roleid, managerid) => {
     if (err) {
       console.log(err);
     }
-    console.log(result);
   })
 }
 
@@ -362,9 +348,6 @@ var addEmployee = async function () {
     .then(async function (data) {
       var managerid = await getManagerId(data);
       var roleid = await getRoleId(data);
-      console.log(data)
-      console.log("managerid = " + managerid)
-      console.log("roleid = " + roleid)
       addEmployeeMySQL(data, roleid, managerid)
       showEmployees()
 
@@ -393,9 +376,6 @@ var updateRole =async function(){
     .then(async function (data) {
       var employeeId = await getManagerId(data);
       var roleId = await getRoleId(data);
-      console.log(data)
-      console.log("employeeID = " + employeeId)
-      console.log("roleid = " + roleId)
       updateRoleySQL(employeeId, roleId)
       showEmployees()
 
