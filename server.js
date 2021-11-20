@@ -217,7 +217,7 @@ function addRole() {
           choices: results
         },
       ])
-      // .then(async function (data){})
+        // .then(async function (data){})
         .then((data) => {
           const sql2 = `SELECT * FROM department WHERE dept_name = '${data.deptName}';`
           db.query(sql2, function (err, results2) {
@@ -242,7 +242,7 @@ function addRole() {
 };
 
 //get managers
-const getManager = () => {
+const getEmployees = () => {
   return db.promise().query(`SELECT employee.id, CONCAT(employee.first_name,' ',employee.last_name) AS name FROM employee; `)
     .then((result) => {
       console.log(result[0])
@@ -251,6 +251,38 @@ const getManager = () => {
       return result
     })
 };
+
+// convert manager to manager ID
+const getManagerId = (data) => {
+  const employeeManager = data.manager.split(" ")
+  var first_name = employeeManager[0];
+  var last_name = employeeManager[1];
+  console.log(first_name)
+  console.log(last_name)
+  const sql2 = `SELECT employee.id FROM employee WHERE first_name = '${first_name}' AND last_name = '${last_name}';`
+  return db.promise().query(sql2)
+    .then((result) => {
+      console.log(result[0])
+      result = result[0].map(obj => obj.id);
+
+      result = result[0]
+      console.log(result)
+      return result
+    })
+}
+//convert role to role id
+
+const getRoleId = (data) => {
+  return db.promise().query(`SELECT job_title.id FROM job_title WHERE title = '${data.role}';`)
+    .then((result) => {
+      console.log(result[0])
+      result = result[0].map(obj => obj.id);
+
+      result = result[0]
+      console.log(result)
+      return result
+    })
+}
 
 //get role
 const getRole = () => {
@@ -262,82 +294,92 @@ const getRole = () => {
       return result
     })
 };
+//add an employee sql function
+const addEmployeeMySQL = (data, roleid, managerid) => {
+  const sql = `INSERT INTO employee  (first_name,last_name,title_id,manager_id)
+  VALUES
+      (?,?,?,?);`
+  const params = [data.first_name, data.last_name, roleid, managerid];
+  console.log(params)
+  db.promise().query(sql, params, (err, result) => {
 
+    if (err) {
+      console.log(err);
+    }
+    console.log(result);
+  })
+}
 //add a employee
-var addEmployee =async function() {
-  var managerList = await getManager();
+var addEmployee = async function () {
+  var managerList = await getEmployees();
   var roleList = await getRole();
-    inquirer.prompt(
-      [
-        {
-          type: 'input',
-          name: 'first_name',
-          message: 'What is the first name?',
-          validate: firstnameInput => {
-            if (firstnameInput) {
-              return true;
-            } else {
-              console.log('You need to enter a first name!');
-              return false;
-            }
+  inquirer.prompt(
+    [
+      {
+        type: 'input',
+        name: 'first_name',
+        message: 'What is the first name?',
+        validate: firstnameInput => {
+          if (firstnameInput) {
+            return true;
+          } else {
+            console.log('You need to enter a first name!');
+            return false;
           }
-        },
-        {
-          type: 'input',
-          name: 'last_name',
-          message: 'What is the last name?',
-          validate: nameInput => {
-            if (nameInput) {
-              return true;
-            } else {
-              console.log('You need to enter a last name!');
-              return false;
-            }
+        }
+      },
+      {
+        type: 'input',
+        name: 'last_name',
+        message: 'What is the last name?',
+        validate: nameInput => {
+          if (nameInput) {
+            return true;
+          } else {
+            console.log('You need to enter a last name!');
+            return false;
           }
-        },
-        {
-          type: 'list',
-          name: 'manager',
-          message: 'Who is the new employees manager?',
-          choices: managerList
-        },
-        {
-          type: 'list',
-          name: 'role',
-          message: 'What is the new employees role?',
-          choices: roleList
-        },
-      ]
-    )
+        }
+      },
+      {
+        type: 'list',
+        name: 'manager',
+        message: 'Who is the new employees manager?',
+        choices: managerList
+      },
+      {
+        type: 'list',
+        name: 'role',
+        message: 'What is the new employees role?',
+        choices: roleList
+      },
+    ]
+  )
+    .then(async function (data) {
+      var managerid = await getManagerId(data);
+      var roleid = await getRoleId(data);
+      console.log(data)
+      console.log("managerid = " + managerid)
+      console.log("roleid = " + roleid)
+      addEmployeeMySQL(data, roleid, managerid)
+      showEmployees()
 
-
-  // const managerChoices =
-  //   db.query('SELECT employee.id, CONCAT(employee.first_name,' ',employee.last_name) AS name FROM employee; ', function (err, results) {
-  //     results = results.map(obj => obj.name);
-  //       .then((data) => {
-  //         const sql2 = `SELECT * FROM department WHERE dept_name = '${data.deptName}';`
-  //         db.query(sql2, function (err, results2) {
-  //           results2 = results2.map(obj => obj.id);
-  //           const sql = `INSERT INTO job_title  (title,salary,department_id)
-  //           VALUES
-  //               (?,?,?);`
-  //                 const params = [data.roleName, data.salary, results2];
-  //                 console.log(params)
-  //                 db.query(sql, params, (err, result) => {
-
-  //                   if (err) {
-  //                     console.log(err);
-  //                   }
-  //                   console.log(result);
-  //                 });
-  //                 showRoles();
-  //         })
-  //       });
-  //   });
-
+    });
 };
 
-
+// update employees role
+var updateRole =async function(){
+  var employeeList = await getEmployees();
+  inquirer.prompt(
+    [
+      {
+        type: 'list',
+        name: 'employee',
+        message: 'Whos role would you like to update?',
+        choices: employeeList
+      },
+    ])
+}
 //main manu handler
 var mainMenu = function () {
 
@@ -363,7 +405,7 @@ var mainMenu = function () {
         addEmployee();
       }
       if (menuResponce.responce === 'Update Employee role') {
-        showDepartments();
+        updateRole();
       }
       if (menuResponce.responce === 'Close ETS') {
         process.exit(1)
