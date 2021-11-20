@@ -10,7 +10,9 @@
 [Questions](#Questions)<br/>
 
 ## Description
-This application allows someone to keep track of employees and thier managers, salaries, roles, and departments.
+This application allows someone to keep track of employees and thier managers, salaries, roles, and departments.<br/>
+See the below link for a walkthrough of the application!<br/>
+[walkthrough](https://watch.screencastify.com/v/v8eCletNqtQB9sHsGZxx)
 
 ## Installation
 npm, inquirer, msql2, cTable
