@@ -1,12 +1,8 @@
-const express = require('express');
 const db = require('./db/connection');
-const app = express();
 const mysql = require('mysql2/promise');
 
 const inquirer = require("inquirer");
 const cTable = require('console.table');
-const { resolve } = require('path/posix');
-var newEmployee = null;
 
 // main menu question
 var menuQuestion = [
@@ -138,7 +134,10 @@ function showDepartments() {
 
 //shows roles in table
 function showRoles() {
-  db.query('SELECT * FROM job_title', function (err, results) {
+  db.query(`SELECT job_title.id, job_title.title, job_title.salary, department.dept_name AS department
+   FROM job_title 
+    JOIN department ON job_title.department_id=department.id`,
+   function (err, results) {
     console.table(results);
     mainMenu();
   });
@@ -277,7 +276,6 @@ const getRoleId = (data) => {
     .then((result) => {
       console.log(result[0])
       result = result[0].map(obj => obj.id);
-
       result = result[0]
       console.log(result)
       return result
@@ -294,7 +292,7 @@ const getRole = () => {
       return result
     })
 };
-//add an employee sql function
+//add an employee SQL function
 const addEmployeeMySQL = (data, roleid, managerid) => {
   const sql = `INSERT INTO employee  (first_name,last_name,title_id,manager_id)
   VALUES
@@ -308,6 +306,12 @@ const addEmployeeMySQL = (data, roleid, managerid) => {
     }
     console.log(result);
   })
+}
+
+// update role SQL function
+const updateRoleySQL = (employeeId, roleid) => {
+  const sql = 
+  db.promise().query(`UPDATE employee SET title_id = ${roleid} WHERE id =${employeeId}`)
 }
 //add a employee
 var addEmployee = async function () {
@@ -370,15 +374,32 @@ var addEmployee = async function () {
 // update employees role
 var updateRole =async function(){
   var employeeList = await getEmployees();
+  var roleList = await getRole();
   inquirer.prompt(
     [
       {
         type: 'list',
-        name: 'employee',
+        name: 'manager',
         message: 'Whos role would you like to update?',
         choices: employeeList
       },
+      {
+        type: 'list',
+        name: 'role',
+        message: 'What is thier new role?',
+        choices: roleList
+      },
     ])
+    .then(async function (data) {
+      var employeeId = await getManagerId(data);
+      var roleId = await getRoleId(data);
+      console.log(data)
+      console.log("employeeID = " + employeeId)
+      console.log("roleid = " + roleId)
+      updateRoleySQL(employeeId, roleId)
+      showEmployees()
+
+    });
 }
 //main manu handler
 var mainMenu = function () {
@@ -412,9 +433,6 @@ var mainMenu = function () {
       }
     })
 };
-
-
-
 
 //starts application
 var initializeETS = function () {
